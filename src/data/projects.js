@@ -46,7 +46,7 @@ const ProjectsData = [
     icons: [TbBrandNextjs, BiLogoTypescript, BiLogoTailwindCss, TbBrandPrisma],
     description: "A modern chatbot application with real-time messaging, admin dashboard, and WebSocket-based communication using Next.js and Prisma.",
     github: "https://github.com/dharmik2910/Chatbot",
-    demo: "",
+    demo: "https://chatbotandsupport.netlify.app/",
   },
   {
     id: "5",
