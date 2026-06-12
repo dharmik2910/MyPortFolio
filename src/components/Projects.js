@@ -76,7 +76,17 @@ const Projects = () => {
                     <FaGithub className="text-lg" />
                     <span>Code</span>
                   </a>
-                  <a
+                  // <a
+                  //   className="flex items-center gap-2 text-sm md:text-base font-medium text-white bg-darkblue hover:bg-blue-700 rounded-lg px-4 py-2 transition-all hover:shadow-md"
+                  //   href={project.demo}
+                  //   target="_blank"
+                  //   rel="noopener noreferrer"
+                  //   aria-label={`View ${project.name} demo`}
+                  // >
+                  //   <FaExternalLinkAlt className="text-base" />
+                  //   <span>Live Demo</span>
+                  // </a>
+                     <a
                     className="flex items-center gap-2 text-sm md:text-base font-medium text-white bg-darkblue hover:bg-blue-700 rounded-lg px-4 py-2 transition-all hover:shadow-md"
                     href={project.demo}
                     target="_blank"
