@@ -10,7 +10,7 @@ const ProjectsData = [
     icons: [BiLogoReact, BiLogoRedux, BiLogoTailwindCss, BiLogoMongodb],
     description: "A full-stack investment dashboard with AI-powered insights, portfolio analytics, real-time tracking, and secure authentication using React, Redux, and MongoDB.",
     github: "https://github.com/dharmik2910/Zelbi-AI-Powered-Investment-Dashboard-",
-    demo: "https://zelbi-ai-powered-investment-dashboard.netlify.app/",
+    demo: "http://13.127.181.122/",
   },
   {
     id: "2",
