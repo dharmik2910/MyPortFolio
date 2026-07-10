@@ -12,35 +12,8 @@ const ProjectsData = [
     github: "https://github.com/dharmik2910/Zelbi-AI-Powered-Investment-Dashboard-",
     demo: "http://13.127.181.122/",
   },
-  {
+    {
     id: "2",
-    name: "E-Commerce-Store",
-    image: "/E Commerce Store.png",
-    icons: [BiLogoReact, BiLogoRedux, TbApi, BiLogoTailwindCss],
-    description: "A full-featured e-commerce platform with shopping cart, product management, and user authentication.",
-    github: "https://github.com/dharmik2910/E-Commerce-Store",
-    demo: "https://e-commerce-store-vite.vercel.app",
-  },
-  {
-    id: "4",
-    name: "Blog Website",
-    image: "/manga.jpeg",
-    icons: [ BiLogoMongodb, SiExpress, BiLogoReact, BiLogoRedux, BiLogoTailwindCss],
-    description: "A responsive blogging platform with user authentication, rich text editor, categories, and comment system.",
-    github: "https://github.com/dharmik2910/",
-    demo: "https://vtrack-expen.vercel.app",
-  },
-  {
-    id: "8",
-    name: "Cancer Awareness & Support page",
-    image: "/cancer.png",
-    icons: [BiLogoHtml5, BiLogoCss3, BiLogoJavascript],
-    description: "A responsive static landing page with modern UI/UX featuring newsletter, FAQ accordion, contact form, and daily quote widget.",
-    github: "https://github.com/dharmik2910/Cancer-Awareness-Support",
-    demo: "https://cancerawarenessandsupport.netlify.app/",
-  },
-  {
-    id: "3",
     name: "Chatbot",
     image: "/chatbot.png",
     icons: [TbBrandNextjs, BiLogoTypescript, BiLogoTailwindCss, TbBrandPrisma],
@@ -48,6 +21,26 @@ const ProjectsData = [
     github: "https://github.com/dharmik2910/Chatbot",
     demo: "https://chatbotandsupport.netlify.app/",
   },
+  {
+    id: "3",
+    name: "E-Commerce-Store",
+    image: "/E Commerce Store.png",
+    icons: [BiLogoReact, BiLogoRedux, TbApi, BiLogoTailwindCss],
+    description: "A full-featured e-commerce platform with shopping cart, product management, and user authentication.",
+    github: "https://github.com/dharmik2910/E-Commerce-Store",
+    demo: "https://e-commerce-store-vite.vercel.app",
+  },
+  
+  {
+    id: "4",
+    name: "Cancer Awareness & Support page",
+    image: "/cancer.png",
+    icons: [BiLogoHtml5, BiLogoCss3, BiLogoJavascript],
+    description: "A responsive static landing page with modern UI/UX featuring newsletter, FAQ accordion, contact form, and daily quote widget.",
+    github: "https://github.com/dharmik2910/Cancer-Awareness-Support",
+    demo: "https://cancerawarenessandsupport.netlify.app/",
+  },
+
   {
     id: "5",
     name: "Account Manager",
@@ -57,6 +50,15 @@ const ProjectsData = [
     github: "https://github.com/dharmik2910/Chaintech-Account-Manager",
     demo: "https://chaintech-account-manager-gnzwljf1t.vercel.app/",
   },
+  {
+    id: "6",
+    name: "Blog Website",
+    image: "/manga.jpeg",
+    icons: [ BiLogoMongodb, SiExpress, BiLogoReact, BiLogoRedux, BiLogoTailwindCss],
+    description: "A responsive blogging platform with user authentication, rich text editor, categories, and comment system.",
+    github: "https://github.com/dharmik2910/",
+    demo: "https://vtrack-expen.vercel.app",
+  }
 ];
 
 export default ProjectsData;
