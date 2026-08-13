@@ -1,6 +1,23 @@
-import { BiLogoMongodb, BiLogoReact, BiLogoRedux, BiLogoTailwindCss, BiLogoTypescript, BiLogoHtml5, BiLogoCss3, BiLogoJavascript } from "react-icons/bi";
-import { TbBrandNextjs, TbApi, TbBrandPrisma } from "react-icons/tb";
+import {
+  BiLogoCss3,
+  BiLogoFirebase,
+  BiLogoHtml5,
+  BiLogoJavascript,
+  BiLogoMongodb,
+  BiLogoNodejs,
+  BiLogoReact,
+  BiLogoRedux,
+  BiLogoTailwindCss,
+  BiLogoTypescript
+} from "react-icons/bi";
+
 import { SiExpress } from "react-icons/si";
+
+import {
+  TbApi,
+  TbBrandNextjs,
+  TbBrandPrisma,
+} from "react-icons/tb";
 
 const ProjectsData = [
   {
@@ -12,15 +29,7 @@ const ProjectsData = [
     github: "https://github.com/dharmik2910/Zelbi-AI-Powered-Investment-Dashboard-",
     demo: "http://13.127.181.122/",
   },
-    {
-    id: "2",
-    name: "Chatbot",
-    image: "/chatbot.png",
-    icons: [TbBrandNextjs, BiLogoTypescript, BiLogoTailwindCss, TbBrandPrisma],
-    description: "A modern chatbot application with real-time messaging, admin dashboard, and WebSocket-based communication using Next.js and Prisma.",
-    github: "https://github.com/dharmik2910/Chatbot",
-    demo: "https://chatbotandsupport.netlify.app/",
-  },
+   
   {
     id: "3",
     name: "E-Commerce-Store",
@@ -30,7 +39,35 @@ const ProjectsData = [
     github: "https://github.com/dharmik2910/E-Commerce-Store",
     demo: "https://e-commerce-store-vite.vercel.app",
   },
-  
+{
+  id: "7",
+  name: "Quiz Player",
+  image: "/Quiz Player.png",
+  icons: [BiLogoReact, BiLogoFirebase],
+  description:
+    "An interactive quiz platform built with React and Firebase, featuring quiz management, real-time data, authentication, and a responsive user interface.",
+  github: "https://github.com/dharmik2910/Quiz-Player",
+  demo: "https://quiz-player-ten.vercel.app/",
+},
+ {
+    id: "2",
+    name: "Chatbot",
+    image: "/chatbot.png",
+    icons: [TbBrandNextjs, BiLogoTypescript, BiLogoTailwindCss, TbBrandPrisma],
+    description: "A modern chatbot application with real-time messaging, admin dashboard, and WebSocket-based communication using Next.js and Prisma.",
+    github: "https://github.com/dharmik2910/Chatbot",
+    demo: "https://chatbotandsupport.netlify.app/",
+  },
+{
+  id: "8",
+  name: "Chat with Website",
+  image: "/Chat with Website.png",
+  icons: [TbBrandNextjs, BiLogoNodejs, TbApi],
+  description:
+    "An AI-powered web application that crawls website content using Cheerio and enables users to interact with website content through a conversational chat interface.",
+  github: "https://github.com/dharmik2910/chat-with-website",
+  demo: "https://chat-with-website-production.up.railway.app/",
+},
   {
     id: "4",
     name: "Cancer Awareness & Support page",
