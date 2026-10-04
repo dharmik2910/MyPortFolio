@@ -1,12 +1,19 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { toast } from "react-toastify";
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { FiArrowUpRight, FiCheck, FiCopy, FiMapPin, FiPhone } from "react-icons/fi";
 import SocialHandles from "./SocialHandles";
-import ContactData from "../data/contact";
+import SectionHeading from "./SectionHeading";
+import useMagnetic from "../hooks/useMagnetic";
+import { trackSpotlight } from "../lib/scroll";
+import { useContent } from "../lib/ContentContext";
 
 const Contact = () => {
+  const { contact: ContactData } = useContent();
   const formRef = useRef();
+  const sendRef = useMagnetic(0.4);
+  const [sending, setSending] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Initialize EmailJS with your public key
@@ -14,178 +21,139 @@ const Contact = () => {
     emailjs.init("6vhErn8f6a61Dx45T");
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Show loading state
-    const button = e.target.querySelector('button[type="submit"]');
-    const originalText = button.textContent;
-    button.disabled = true;
-    button.textContent = "Sending...";
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(ContactData.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch (err) {
+      window.location.href = `mailto:${ContactData.email}`;
+    }
+  };
 
-    emailjs
-      .sendForm(
-        "service_nv36dt8",
-        "template_fafdq8q",
-        formRef.current,
-        "6vhErn8f6a61Dx45T"
-      )
-      .then(
-        (result) => {
-          console.log("SUCCESS!", result.text);
-          toast.success("Message sent successfully!");
-          e.target.reset();
-          button.disabled = false;
-          button.textContent = originalText;
-        },
-        (error) => {
-          console.error("FAILED...", error);
-          console.error("Error details:", {
-            text: error.text,
-            status: error.status,
-            message: error.message
-          });
-          toast.error(`Unable to send message: ${error.text || error.message || "Unknown error"}`);
-          button.disabled = false;
-          button.textContent = originalText;
-        }
-      );
+  // Saves the message to the admin inbox alongside the EmailJS notification.
+  const saveToInbox = async (form) => {
+    const data = Object.fromEntries(new FormData(form));
+    const res = await fetch("/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: data.user_name,
+        email: data.user_email,
+        message: data.message,
+        company: data.company,
+      }),
+    });
+    if (!res.ok) throw new Error(`Inbox request failed (${res.status})`);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    const form = formRef.current;
+
+    const [mail, inbox] = await Promise.allSettled([
+      emailjs.sendForm("service_nv36dt8", "template_fafdq8q", form, "6vhErn8f6a61Dx45T"),
+      saveToInbox(form),
+    ]);
+
+    if (mail.status === "fulfilled" || inbox.status === "fulfilled") {
+      toast.success("Message sent successfully!");
+      form.reset();
+    } else {
+      const error = mail.reason || {};
+      console.error("FAILED...", mail.reason, inbox.reason);
+      toast.error(`Unable to send message: ${error.text || error.message || "Unknown error"}`);
+    }
+    setSending(false);
   };
 
   return (
-    <section className="text-gray-600 body-font ">
-      <div className="px-3 py-5 mx-auto text-center md:mt-7 sm:mx-7 md:mx-12 lg:mx-32 xl:mx-56">
-        <div id="contact" className="flex flex-col text-center w-full mb-4">
-          <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-black">
-            Contact Me
-          </h1>
-          <p
-            data-aos="zoom-in"
-            data-aos-duration="1000"
-            data-aos-once="false"
-            className="text-lg font-medium leading-relaxed text-dark-orange "
-          >
-            Let's keep in touch
-          </p>
-        </div>
-        <div className="flex flex-col gap-2 md:flex-row w-full mx-auto rounded-xl bg-darkblue p-4 md:gap-7 lg:gap-9 lg:rounded-2xl xl:gap-10">
-          <div className="p-2 w-full text-center lg:p-5 xl:p-7 md:w-1/2 lg:w-4/6">
-            <h1
-              data-aos="zoom-in-down"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="hidden md:block text-2xl lg:text-3xl text-dark-orange font-medium mb-3 lg:mb-4"
-            >
-              Get In Touch
-            </h1>
-            <div
-              data-aos="zoom-in-down"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-5 mb-4 justify-center md:mb-5"
-            >
-              <SocialHandles />
-            </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center mb-4 md:gap-2 lg:gap-5"
-            >
-              <FaPhoneAlt className="text-white" />
-              <p className="text-white md:text-lg ">{ContactData.phone}</p>
-            </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center mb-4 md:gap-2 lg:gap-5"
-            >
-              <FaEnvelope className="text-white" />
+    <section id="contact" className="relative px-5 py-24 md:px-8 md:py-32">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading index="04" label="Contact" title="Let's work" accent="together" />
+
+        <div className="grid gap-16 lg:grid-cols-12">
+          {/* Details */}
+          <div className="lg:col-span-5">
+            <p data-reveal="fade" className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-cream-mute">
+              Drop a line
+            </p>
+            <div data-reveal="up" className="flex flex-wrap items-center gap-4">
               <a
                 href={`mailto:${ContactData.email}`}
-                className="text-white md:text-lg"
+                className="u-link break-all font-display text-2xl font-bold text-cream hover:text-ember sm:text-3xl"
               >
                 {ContactData.email}
               </a>
+              <button
+                onClick={copyEmail}
+                aria-label="Copy email address"
+                className="grid h-10 w-10 place-items-center rounded-full border border-cream/15 text-cream-dim transition-colors hover:border-ember hover:text-ember"
+              >
+                {copied ? <FiCheck className="text-ok" /> : <FiCopy />}
+              </button>
             </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center md:gap-2 lg:gap-5"
-            >
-              <FaMapMarkerAlt className="text-white" />
-              <p className="leading-normal text-start text-white md:text-lg">
+
+            <ul className="mt-10 space-y-4 text-lg text-cream-dim">
+              <li data-reveal="up" style={{ "--d": "80ms" }} className="flex items-center gap-4">
+                <FiPhone className="text-ember" />
+                <a href={`tel:${ContactData.phone.replace(/\s+/g, "")}`} className="u-link hover:text-cream">
+                  {ContactData.phone}
+                </a>
+              </li>
+              <li data-reveal="up" style={{ "--d": "160ms" }} className="flex items-center gap-4">
+                <FiMapPin className="text-ember" />
                 {ContactData.address}
-              </p>
+              </li>
+            </ul>
+
+            <div data-reveal="up" style={{ "--d": "240ms" }} className="mt-10">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-cream-mute">Elsewhere</p>
+              <SocialHandles />
             </div>
           </div>
+
+          {/* Form */}
           <form
-            data-aos="zoom-in-up"
-            data-aos-duration="1000"
-            data-aos-once="false"
+            data-reveal="up"
             ref={formRef}
             onSubmit={handleSubmit}
-            className="flex bg-whitesmoke flex-col p-2 rounded-lg md:w-1/2 md:p-4 lg:px-5 lg:py-7 lg:m-4 lg:w-3/5"
+            onPointerMove={trackSpotlight}
+            className="spotlight flex flex-col gap-8 rounded-3xl border border-cream/10 bg-ink-800/60 p-6 sm:p-10 lg:col-span-7"
           >
-            <input
-              type="hidden"
-              name="to_email"
-              value={ContactData.email}
-            />
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <input
-                required
-                placeholder="Name"
-                type="text"
-                name="user_name"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-black p-2 leading-8 transition-colors duration-200 ease-in-out"
-              />
+            <input type="hidden" name="to_email" value={ContactData.email} />
+            {/* Honeypot: hidden from people, bots fill it in and get silently dropped */}
+            <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+            <div className="relative z-10 grid gap-8 sm:grid-cols-2">
+              <div className="field">
+                <input required id="user_name" placeholder=" " type="text" name="user_name" autoComplete="name" />
+                <label htmlFor="user_name">Your name</label>
+                <span className="bar" />
+              </div>
+              <div className="field">
+                <input required id="user_email" placeholder=" " type="email" name="user_email" autoComplete="email" />
+                <label htmlFor="user_email">Your email</label>
+                <span className="bar" />
+              </div>
             </div>
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <input
-                required
-                placeholder="Email"
-                type="email"
-                name="user_email"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-black p-2 leading-8 transition-colors duration-200 ease-in-out"
-              />
+            <div className="field relative z-10">
+              <textarea required id="message" placeholder=" " name="message" rows={5} />
+              <label htmlFor="message">Tell me about your project</label>
+              <span className="bar" />
             </div>
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <textarea
-                required
-                placeholder="Message"
-                name="message"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-black p-2 resize-none leading-6 transition-colors duration-200 ease-in-out"
-              ></textarea>
-            </div>
-            <div
-              data-aos="zoom-in"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <button 
+            <div className="relative z-10 flex items-center justify-between gap-6 pt-2">
+              <p className="hidden max-w-[16rem] text-sm text-cream-mute sm:block">
+                I usually reply within a day. Let's make something great.
+              </p>
+              <button
+                ref={sendRef}
                 type="submit"
-                className=" font-medium mx-auto my-3 text-white bg-dark-orange border-0 py-2 px-12 focus:outline-none hover:scale-110 hover:bg-orange-600 transition duration-500 rounded-xl text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={sending}
+                className="btn btn-primary ml-auto h-28 w-28 shrink-0 flex-col !gap-1 !p-0 text-base disabled:cursor-not-allowed disabled:opacity-60 sm:h-32 sm:w-32"
               >
-                Send
+                <FiArrowUpRight className={`text-2xl ${sending ? "animate-spin" : ""}`} />
+                {sending ? "Sending" : "Send"}
               </button>
             </div>
           </form>

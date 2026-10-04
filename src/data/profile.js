@@ -1,6 +1,7 @@
 const ProfileData = {
   img: require("../assets/Images/hero.png"),
   name: "Dharmik Rabadiya",
+  available: true,
   professions: ["Full Stack Developer", "Enthusiastic Dev"],
   info: [
     "Knack of building web applications using MERN stack.",
