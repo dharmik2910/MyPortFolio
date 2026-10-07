@@ -129,18 +129,8 @@ const Profile = () => {
             aria-label={ProfileData.name}
             className="whitespace-nowrap font-display text-[9.6vw] font-extrabold uppercase leading-[0.9] tracking-[-0.04em] text-cream md:text-[8.2vw] xl:text-[7.4rem]"
           >
-            <span className="flex items-center gap-[0.12em]">
+            <span className="flex items-center">
               <SplitChars text={first} />
-              <span
-                className="hero-portrait relative hidden h-[0.74em] overflow-hidden rounded-full bg-white ring-2 ring-ember ring-offset-4 ring-offset-ink md:inline-block"
-                aria-hidden="true"
-              >
-                <img
-                  src={ProfileData.img}
-                  alt=""
-                  className="h-full w-full object-cover object-[50%_45%] transition-transform duration-700 ease-expo hover:scale-105"
-                />
-              </span>
             </span>
             <span className="flex items-center justify-start md:justify-end">
               <SplitChars text={last} base={250} className="text-outline" />
@@ -151,12 +141,7 @@ const Profile = () => {
         {/* Bottom row */}
         <div className="grid items-end gap-10 md:grid-cols-12">
           <div className="md:col-span-6 lg:col-span-5">
-            <div className="hero-fade flex items-center gap-4 md:hidden" style={{ "--d": "900ms" }}>
-              <img
-                src={ProfileData.img}
-                alt={ProfileData.name}
-                className="h-16 w-16 rounded-full border border-cream/20 bg-cream object-cover object-[50%_30%]"
-              />
+            <div className="hero-fade md:hidden" style={{ "--d": "900ms" }}>
               <SocialHandles />
             </div>
             <p className="hero-fade mt-6 font-display text-2xl font-semibold md:mt-0 md:text-3xl" style={{ "--d": "1000ms" }}>

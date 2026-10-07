@@ -167,16 +167,6 @@ html.lenis body {
   transform: none;
 }
 
-.hero-portrait {
-  width: 0;
-  opacity: 0;
-  transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1) 500ms, opacity 0.6s ease 500ms;
-}
-.loaded .hero-portrait {
-  width: 1.2em;
-  opacity: 1;
-}
-
 .text-outline {
   color: transparent;
   -webkit-text-stroke: 1px rgb(var(--c-cream) / 0.85);

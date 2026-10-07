@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { SOCIAL_ICONS } from "../lib/icons";
-import ProfileData from "../data/profile";
 import { api } from "./api";
-import { Card, IconPicker, ImageInput, ListEditor, SaveBar, StringList, TextArea, TextInput, Toggle, inputCls } from "./ui";
-
-const DEFAULT_PHOTO = ProfileData.img;
+import { Card, IconPicker, ListEditor, SaveBar, StringList, TextArea, TextInput, Toggle, inputCls } from "./ui";
 
 // Draft/dirty/save plumbing shared by the three settings forms.
 const useSettingsForm = (key, initial, onSaved) => {
@@ -40,14 +37,6 @@ export const ProfileForm = ({ value, onSaved }) => {
         <Card title="Identity" description="Shown in the hero, navbar and footer.">
           <div className="space-y-5">
             <TextInput label="Full name" value={draft.name} onChange={(e) => set("name")(e.target.value)} />
-            <ImageInput
-              label="Photo"
-              aspect="aspect-square"
-              value={draft.img}
-              fallbackSrc={DEFAULT_PHOTO}
-              onChange={set("img")}
-              hint="Leave empty to use the photo bundled with the site."
-            />
             <TextInput
               label="Resume link"
               type="url"
