@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import Lenis from "lenis";
 import "./App.css";
 import About from "./components/About";
@@ -18,13 +18,25 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useContent } from "./lib/ContentContext";
 import { useTheme } from "./lib/theme";
+import { trackVisit } from "./lib/track";
+
+// three.js particle layer behind every section, in its own chunk.
+const ParticleWorld = lazy(() => import("./components/ParticleWorld"));
 
 function App() {
-  const { skills: SkillsData } = useContent();
+  const { skills: SkillsData, profile: ProfileData } = useContent();
+  const initials = ProfileData.name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 3)
+    .toUpperCase();
   const { theme } = useTheme();
   const [loaded, setLoaded] = useState(false);
 
   useReveal();
+
+  useEffect(trackVisit, []);
 
   // Smooth scrolling (skipped for reduced-motion users)
   useEffect(() => {
@@ -55,9 +67,12 @@ function App() {
     <div className={`App ${loaded ? "loaded" : ""}`}>
       <Preloader onDone={() => setLoaded(true)} />
       <Cursor />
+      <Suspense fallback={null}>
+        <ParticleWorld theme={theme} ready={loaded} initials={initials} />
+      </Suspense>
       <div className="grain" aria-hidden="true" />
       <Navbar />
-      <main>
+      <main className="relative z-[1]">
         <Profile />
         <Marquee
           items={SkillsData.slice(0, 12).map((s) => s.name)}

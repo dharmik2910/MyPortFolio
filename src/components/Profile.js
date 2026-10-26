@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FiArrowDown, FiArrowUpRight } from "react-icons/fi";
 import SocialHandles from "./SocialHandles";
-import HeroCanvas from "./HeroCanvas";
 import useMagnetic from "../hooks/useMagnetic";
 import { scrollToSection } from "../lib/scroll";
 import { useContent } from "../lib/ContentContext";
-import { useTheme } from "../lib/theme";
 
 const SplitChars = ({ text, base = 0, className = "" }) => (
   <span className={`inline-block overflow-hidden pb-[0.04em] align-bottom ${className}`} aria-hidden="true">
@@ -76,7 +74,6 @@ const LocalTime = () => {
 
 const Profile = () => {
   const { profile: ProfileData, contact: ContactData } = useContent();
-  const { theme } = useTheme();
   const [first, ...rest] = ProfileData.name.split(" ");
   const last = rest.join(" ");
   const contentRef = useRef(null);
@@ -98,7 +95,11 @@ const Profile = () => {
 
   return (
     <section id="home" className="relative flex min-h-[100svh] flex-col overflow-hidden">
-      <HeroCanvas className="absolute inset-0" theme={theme} />
+      {/* Warm glow under the particle wave (see ParticleWorld) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(255,88,35,0.16),transparent_65%)]"
+      />
 
       <div
         ref={contentRef}

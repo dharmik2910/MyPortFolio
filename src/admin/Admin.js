@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  FiArrowUpRight, FiBriefcase, FiCpu, FiGrid, FiInbox, FiLock, FiLogOut, FiPhone, FiUser, FiFileText,
+  FiArrowUpRight, FiBriefcase, FiCpu, FiEye, FiGrid, FiInbox, FiLock, FiLogOut, FiPhone, FiUser, FiFileText,
 } from "react-icons/fi";
 import { api, getToken, setToken, UNAUTHORIZED_EVENT } from "./api";
 import { useTheme } from "../lib/theme";
@@ -11,9 +11,11 @@ import { AboutForm, ContactForm, ProfileForm } from "./SettingsForms";
 import ProjectsAdmin from "./ProjectsAdmin";
 import SkillsAdmin from "./SkillsAdmin";
 import MessagesAdmin, { formatDate } from "./MessagesAdmin";
+import VisitorsAdmin from "./VisitorsAdmin";
 
 const SECTIONS = [
   { id: "dashboard", label: "Dashboard", icon: FiGrid },
+  { id: "visitors", label: "Visitors", icon: FiEye },
   { id: "messages", label: "Inbox", icon: FiInbox },
   { id: "projects", label: "Projects", icon: FiBriefcase },
   { id: "skills", label: "Skills", icon: FiCpu },
@@ -82,9 +84,11 @@ const Login = ({ onLogin }) => {
   );
 };
 
-const Dashboard = ({ data, messages, go }) => {
+const Dashboard = ({ data, messages, visits, go }) => {
   const unread = messages.filter((m) => !m.is_read);
   const stats = [
+    { label: "Total views", value: visits?.totals.views ?? "–", to: "visitors" },
+    { label: "Unique visitors", value: visits?.totals.visitors ?? "–", to: "visitors" },
     { label: "Projects", value: data.projects.length, to: "projects" },
     { label: "Skills", value: data.skills.length, to: "skills" },
     { label: "Messages", value: messages.length, to: "messages" },
@@ -92,7 +96,7 @@ const Dashboard = ({ data, messages, go }) => {
   ];
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {stats.map((s) => (
           <button
             key={s.label}
@@ -142,6 +146,7 @@ const Shell = ({ onLogout }) => {
   const [section, setSection] = useState(SECTIONS.some((s) => s.id === initial) ? initial : "dashboard");
   const [data, setData] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [visits, setVisits] = useState(null);
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
@@ -150,6 +155,8 @@ const Shell = ({ onLogout }) => {
       const [content, inbox] = await Promise.all([api("content", { query: { fresh: Date.now() } }), api("messages")]);
       setData(normalize(content));
       setMessages(inbox.messages);
+      // Stats are a nice-to-have on the dashboard; don't block the editor if they fail.
+      api("visits", { query: { days: 30 } }).then(setVisits, () => setVisits(null));
     } catch (err) {
       setError(err.message);
     }
@@ -222,7 +229,8 @@ const Shell = ({ onLogout }) => {
         {!data && !error && <p className="text-cream-dim">Loading…</p>}
         {data && (
           <>
-            {section === "dashboard" && <Dashboard data={data} messages={messages} go={go} />}
+            {section === "dashboard" && <Dashboard data={data} messages={messages} visits={visits} go={go} />}
+            {section === "visitors" && <VisitorsAdmin />}
             {section === "messages" && <MessagesAdmin messages={messages} setMessages={setMessages} />}
             {section === "projects" && <ProjectsAdmin projects={data.projects} setProjects={setList("projects")} />}
             {section === "skills" && <SkillsAdmin skills={data.skills} setSkills={setList("skills")} />}

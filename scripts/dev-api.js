@@ -7,15 +7,19 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 
-// Minimal .env.local loader (KEY=value per line).
+// Minimal .env.local loader (KEY=value per line), values taken literally.
+// The file wins over process.env: under `npm start`, Create React App has already loaded
+// these files with dotenv-expand, which mangles any "$" (e.g. in ADMIN_PASSWORD).
+const fromFiles = {};
 for (const file of [".env.local", ".env"]) {
   const p = path.join(ROOT, file);
   if (!fs.existsSync(p)) continue;
   for (const line of fs.readFileSync(p, "utf8").split(/\r?\n/)) {
     const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/.exec(line);
-    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+    if (m && !(m[1] in fromFiles)) fromFiles[m[1]] = m[2].replace(/^["']|["']$/g, "");
   }
 }
+Object.assign(process.env, fromFiles);
 
 const readBody = (req) =>
   new Promise((resolve, reject) => {

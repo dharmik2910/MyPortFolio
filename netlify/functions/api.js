@@ -9,6 +9,7 @@ const handlers = {
   messages: require("../../api/messages"),
   upload: require("../../api/upload"),
   image: require("../../api/image"),
+  visits: require("../../api/visits"),
 };
 
 // Minimal Vercel/Express-style response object that collects a Lambda response.
